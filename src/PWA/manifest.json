@@ -22,6 +22,7 @@
     "description": "Веб-студия",
     "name": "Веб-студия: создаем качественные сайты",
     "short_name": "Веб-студия",
-    "start_url": "/index.html",
+    "start_url": "https://alex1624.gitverse.site/260204_pwa/index.html",
+    "scope": "https://alex1624.gitverse.site/260204_pwa/",
     "id": "lsdhjkadkhy086lkujl"
 }
