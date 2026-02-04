@@ -1,0 +1,123 @@
+// Mobile menu toggle
+document.querySelector('.mobile-menu-btn').addEventListener('click', function () {
+    const navLinks = document.querySelector('.nav-links');
+    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+
+    if (navLinks.style.display === 'flex') {
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '100%';
+        navLinks.style.left = '0';
+        navLinks.style.right = '0';
+        navLinks.style.background = 'white';
+        navLinks.style.padding = '30px';
+        navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        navLinks.style.gap = '20px';
+    }
+});
+
+// Smooth scrolling for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+
+            // Close mobile menu if open
+            const navLinks = document.querySelector('.nav-links');
+            if (window.innerWidth <= 992 && navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            }
+        }
+    });
+});
+
+// Contact form modal
+function openContactForm() {
+    const modalHTML = `
+                <div class="modal-overlay" id="contactModal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:2000;padding:20px;">
+                    <div style="background:white;border-radius:var(--border-radius);padding:40px;max-width:500px;width:100%;box-shadow:var(--shadow-card);position:relative;">
+                        <button onclick="closeContactForm()" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--gray);">&times;</button>
+                        
+                        <h3 style="font-size:1.8rem;margin-bottom:10px;color:var(--dark);">Заказать консультацию</h3>
+                        <p style="color:var(--gray);margin-bottom:30px;">Заполните форму, и мы свяжемся с вами в течение 24 часов</p>
+                        
+                        <form id="contactForm" style="display:flex;flex-direction:column;gap:20px;">
+                            <div>
+                                <input type="text" placeholder="Ваше имя" required style="width:100%;padding:15px;border:2px solid var(--gray-light);border-radius:var(--border-radius-sm);font-size:1rem;transition:var(--transition);">
+                            </div>
+                            
+                            <div>
+                                <input type="email" placeholder="Email" required style="width:100%;padding:15px;border:2px solid var(--gray-light);border-radius:var(--border-radius-sm);font-size:1rem;transition:var(--transition);">
+                            </div>
+                            
+                            <div>
+                                <input type="tel" placeholder="Телефон" style="width:100%;padding:15px;border:2px solid var(--gray-light);border-radius:var(--border-radius-sm);font-size:1rem;transition:var(--transition);">
+                            </div>
+                            
+                            <div>
+                                <textarea placeholder="Расскажите о вашем проекте" rows="4" style="width:100%;padding:15px;border:2px solid var(--gray-light);border-radius:var(--border-radius-sm);font-size:1rem;transition:var(--transition);resize:vertical;"></textarea>
+                            </div>
+                            
+                            <button type="submit" style="background:var(--primary);color:white;border:none;padding:16px;border-radius:var(--border-radius-sm);font-weight:600;font-size:1rem;cursor:pointer;transition:var(--transition);">
+                                Отправить заявку
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Handle form submission
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        alert('Спасибо за заявку! Мы свяжемся с вами в ближайшее время.');
+        closeContactForm();
+    });
+}
+
+function closeContactForm() {
+    const modal = document.getElementById('contactModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Close modal on overlay click
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        closeContactForm();
+    }
+});
+
+// Animate elements on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe elements to animate
+document.querySelectorAll('.service-card, .portfolio-card, .process-step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+});
